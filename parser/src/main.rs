@@ -3,31 +3,44 @@
 
 
 use std::process::Command;
-use pgn_reader::{Visitor, Skip, BufferedReader, SanPlus};
 
+use std::fs::File;
+use std::io::{self, Write};
+
+use zzz::ProgressBarIterExt as _;
 
 mod disambiguation;
 mod filenameiterator;
 mod pgniterator;
 
 use filenameiterator::FileNameIterator;
-use pgniterator::pgn_records;
+use pgniterator::{records, write_binary_record_to_file,BinaryParser, StringParser, BinaryRecord};
 
 fn main() {
     let data_directory = "../data";
     unzip_all(data_directory);
     let filenames = FileNameIterator::new(data_directory).has_extension("pgn");
+
     for filename in filenames {
-        let pgn_records = pgn_records(filename.as_str()).unwrap();
-        
-        
-        //println!("{:?}", pgn_records.next());
+        println!("{}", filename);
+       
+        let mut file = File::create("./test.tnot").unwrap();
+        let records = records(filename.as_str(), BinaryParser).unwrap();
+        for result in records.into_iter().progress() {
+            match result {
+                Ok(record) => { write_binary_record_to_file(&record, &mut file); },
+                Err(msg) => {},
+            }
+        }
+        //
         //println!();
         //println!("{:?}", pgn_records.next());
-
     }
-
 }
+
+
+
+
 
 fn unzip_all(directory : &str) {
     let filenames = FileNameIterator::new(directory).has_extension("zst");
