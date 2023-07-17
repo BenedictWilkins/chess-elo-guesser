@@ -1,6 +1,7 @@
 use std::fs::File;
 use std::io::{self, BufRead, BufReader, Write};
 use std::marker::PhantomData;
+use std::path::PathBuf;
 
 use crate::disambiguation::{parse};
 
@@ -117,7 +118,7 @@ impl<R: BufRead, X, T : TNotationParse<X>> Iterator for RecordIterator<R, X, T> 
     }
 }
 
-pub fn records<X, T : TNotationParse<X>>(file_path: &str, record_parser : T) -> io::Result<RecordIterator<BufReader<File>, X, T>> {
+pub fn records<X, T : TNotationParse<X>>(file_path: &PathBuf, record_parser : T) -> io::Result<RecordIterator<BufReader<File>, X, T>> {
     let file = File::open(file_path)?;
     let reader = BufReader::new(file);
     let iter = RecordIterator { reader, record_parser, _phantom : PhantomData };

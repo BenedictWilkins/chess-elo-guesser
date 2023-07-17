@@ -1,13 +1,16 @@
 [package]
-name = "parser"
+name = "pgn2tnot"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+itertools = "*"
+glob = "*"
 regex = "1.5"
 lazy_static = "1.4"
 pgn-reader = "0.25.0"
 shakmaty = "0.26.0"
 zzz = "0.3"
+clap = { version = "4.3.14", features = ["derive"] }
