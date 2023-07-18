@@ -1,5 +1,5 @@
 
-from tnotation_loader import load_tnot_data, load_lan_data
+from chess_elo_guesser import load_tnot_data, load_lan_data
 import time
 
 
