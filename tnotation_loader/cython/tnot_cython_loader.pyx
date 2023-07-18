@@ -33,5 +33,8 @@ def load_data(filename):
         # Append the meta and data as a tuple to the data_blocks list
         data_blocks.append((meta, data))
 
+    
+
+
     # Return the list of data blocks
     return data_blocks

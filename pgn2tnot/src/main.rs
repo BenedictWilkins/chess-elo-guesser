@@ -14,7 +14,6 @@ use std::fs::File;
 use zzz::ProgressBarIterExt as _;
 
 mod disambiguation;
-mod filenameiterator;
 mod pgniterator;
 mod filenamechunker;
 

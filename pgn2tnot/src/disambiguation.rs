@@ -37,13 +37,14 @@ impl From<Role> for String {
 
 impl From<Role> for u16 {
     fn from(value: Role) -> Self {
-        return value.into();
+        let x : u16 = value.into();
+        return x - 1;
     }
 }
 
 impl From<u16> for Role {
     fn from(value: u16) -> Self {
-        let role = shakmaty::Role ::try_from(value);
+        let role = shakmaty::Role ::try_from(value + 1);
         return role.unwrap().into();
     }
 }
@@ -107,12 +108,13 @@ impl<T> TNotation<T> {
         // 6 bits to
         // u16!
         let m = san_plus.san.to_move(&self.pos).unwrap();
-        let role : u16 = m.role().into();         // 3 bits
+        let role : u16 = (m.role() as u16) - 1;         // 3 bits
+        //println!("{}", role);
         let _from = m.from().unwrap();
         let _to = m.to();     
         let to = TNotation::<T>::castle_position(&san_plus.san, &_from, &_to) as u16;   // 6 bits
         let from = _from as u16;                                             // 6 bits
-        let promotion = match m.promotion() { None => 0, Some(x) => x as u16 }; //3 bits promote to...? 
+        let promotion = match m.promotion() { None => 0, Some(x) => x as u16 - 1}; //3 bits promote to...? 
         let mut y = 0;
         if promotion == 0 {
             y = (role << 1) + (from << 4) + (to << 10);
@@ -155,8 +157,12 @@ impl Visitor for TNotation<Vec<u16>> {
     }
     fn san(&mut self, san_plus: SanPlus) {
         let x = self.to_bits(&san_plus);
+        //println!("{:?} {:?}", self.to_string(&san_plus), self.from_bits(x));
         let san = san_plus.san;
         let m = san.to_move(&self.pos).unwrap();
+
+        
+
         self.result.push(x);
         self.pos.play_unchecked(&m);
     }
